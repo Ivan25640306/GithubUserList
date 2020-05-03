@@ -1,6 +1,7 @@
 package com.ivan.android.githubuserlist.ui
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.ivan.android.githubuserlist.R
@@ -10,6 +11,7 @@ import com.ivan.android.githubuserlist.GitHubAppliction
 import com.ivan.android.githubuserlist.model.GitHubUserDetail
 import com.ivan.android.githubuserlist.util.loadUrlWithCircleCrop
 import kotlinx.android.synthetic.main.activity_user_detail.*;
+import kotlinx.android.synthetic.main.view_error_page.*
 import javax.inject.Inject
 
 class UserDetailActivity : AppCompatActivity() {
@@ -78,5 +80,6 @@ class UserDetailActivity : AppCompatActivity() {
         tv_badge_site_admin.visibility = if (detail.site_admin) View.VISIBLE else View.GONE
         tv_location.text = detail.location
         tv_link.text = detail.blog
+        tv_link.movementMethod = LinkMovementMethod.getInstance()
     }
 }

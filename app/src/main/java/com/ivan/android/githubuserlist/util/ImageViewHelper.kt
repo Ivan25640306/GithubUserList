@@ -10,7 +10,7 @@ fun ImageView.loadUrlWithCircleCrop(url: String?, size: Int = -1) {
     val glideBuilder =
         Glide.with(this).load(url).placeholder(R.drawable.ic_mood_green)
             .apply(RequestOptions.bitmapTransform(CircleCrop()))
-            .thumbnail(0.1f)
+            .thumbnail(0.3f)
 
     if (size != -1) {
         glideBuilder.override(size)

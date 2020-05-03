@@ -13,6 +13,7 @@ import com.ivan.android.githubuserlist.R
 import com.ivan.android.githubuserlist.util.dpToPx
 import com.ivan.android.githubuserlist.viewmodel.UsersViewModel
 import kotlinx.android.synthetic.main.activity_users.*
+import kotlinx.android.synthetic.main.view_error_page.*
 import javax.inject.Inject
 
 class UsersActivity : AppCompatActivity() {
@@ -45,12 +46,26 @@ class UsersActivity : AppCompatActivity() {
             firstLoading = false
         }
 
-        viewModel.loadState.observe(this) { loadstate ->
-            loadingAdapter.loadState = loadstate
+        viewModel.loadState.observe(this) { loadState ->
 
-            rv_user_list.post {
-                loadingAdapter.notifyDataSetChanged()
+            if (loadState is LoadState.Error && gitHubAdapter.itemCount == 0) {
+                layout_error.visibility = View.VISIBLE
+                rv_user_list.visibility = View.INVISIBLE
+                tv_error_msg.text = loadState.error.message
+
+            } else {
+                loadingAdapter.loadState = loadState
+                rv_user_list.post {
+                    loadingAdapter.notifyDataSetChanged()
+                }
             }
+
+        }
+
+        btn_reload.setOnClickListener {
+            layout_error.visibility = View.INVISIBLE
+            rv_user_list.visibility = View.VISIBLE
+            viewModel.checkLoad()
         }
 
         gitHubAdapter = GitHubUsersAdapter(photoSize = this.dpToPx(58.0f))
