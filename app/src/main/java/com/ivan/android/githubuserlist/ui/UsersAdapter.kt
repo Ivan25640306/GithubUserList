@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.view_single_user.view.*
 
 
 class GitHubUsersAdapter(
-    val userList: ArrayList<GitHubUser> = ArrayList(),
+    private val userList: ArrayList<GitHubUser> = ArrayList(),
     val photoSize: Int = -1
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -50,7 +50,7 @@ class GitHubUsersAdapter(
 
             if (position == userList.size - 1 && needCheckSlideBottom) {
                 needCheckSlideBottom = false
-                itemSliceBottomHandler?.onItemSllideBottom()
+                itemSliceBottomHandler?.onItemSlideBottom()
             }
         }
     }
@@ -67,7 +67,7 @@ class GitHubUsersAdapter(
             itemView.setOnClickListener {
                 user?.let {
                     val intent = Intent(itemView.context, UserDetailActivity::class.java)
-                    intent.putExtra("UserDetail", it.login)
+                    intent.putExtra(UserDetailActivity.ATTR_USER_DETAIL, it.login)
                     itemView.context.startActivity(intent)
 
                 }
@@ -98,5 +98,5 @@ class GitHubUsersAdapter(
 }
 
 interface IItemSlideBottom {
-    fun onItemSllideBottom()
+    fun onItemSlideBottom()
 }

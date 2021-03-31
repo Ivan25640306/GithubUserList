@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.observe
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,34 +33,37 @@ class UsersActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_users)
 
-        viewModel.usersList.observe(this) { value ->
-            if (value.isEmpty()) {
-                if (firstLoading) {
-                    viewModel.checkLoad()
+        viewModel.usersList.observe(this,
+            Observer { value ->
+
+                if (value.isEmpty()) {
+                    if (firstLoading) {
+                        viewModel.checkLoad()
+                    }
+                } else {
+                    val valueNum = value.size
+                    gitHubAdapter.userDataUpdate(value)
+                    viewModel.setSince(value[valueNum - 1].id)
                 }
-            } else {
-                val valueNum = value.size
-                gitHubAdapter.userDataUpdate(value)
-                viewModel.setSince(value[valueNum - 1].id)
-            }
-            firstLoading = false
-        }
+                firstLoading = false
+            })
 
-        viewModel.loadState.observe(this) { loadState ->
 
-            if (loadState is LoadState.Error && gitHubAdapter.itemCount == 0) {
-                layout_error.visibility = View.VISIBLE
-                rv_user_list.visibility = View.INVISIBLE
-                tv_error_msg.text = loadState.error.message
+        viewModel.loadState.observe(this,
+            Observer { loadState ->
+                if (loadState is LoadState.Error && gitHubAdapter.itemCount == 0) {
+                    layout_error.visibility = View.VISIBLE
+                    rv_user_list.visibility = View.INVISIBLE
+                    tv_error_msg.text = loadState.error.message
 
-            } else {
-                loadingAdapter.loadState = loadState
-                rv_user_list.post {
-                    loadingAdapter.notifyDataSetChanged()
+                } else {
+                    loadingAdapter.loadState = loadState
+                    rv_user_list.post {
+                        loadingAdapter.notifyDataSetChanged()
+                    }
                 }
-            }
 
-        }
+            })
 
         btn_reload.setOnClickListener {
             layout_error.visibility = View.INVISIBLE
@@ -75,7 +78,7 @@ class UsersActivity : AppCompatActivity() {
         rv_user_list.addItemDecoration(SpacesItemDecoration(this.dpToPx(10.0f)))
         rv_user_list.adapter = adapter
         gitHubAdapter.itemSliceBottomHandler = object : IItemSlideBottom {
-            override fun onItemSllideBottom() {
+            override fun onItemSlideBottom() {
                 viewModel.checkLoad()
             }
         }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.ivan.android.githubuserlist.R
 import com.ivan.android.githubuserlist.viewmodel.UserDetailViewModel
 import androidx.lifecycle.observe
@@ -16,6 +17,10 @@ import javax.inject.Inject
 
 class UserDetailActivity : AppCompatActivity() {
 
+    companion object {
+        const val ATTR_USER_DETAIL = "UserDetail"
+    }
+
     @Inject
     lateinit var viewModel: UserDetailViewModel
 
@@ -25,36 +30,39 @@ class UserDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_detail)
 
-        val userName = intent.getStringExtra("UserDetail")
+        val userName = intent.getStringExtra(ATTR_USER_DETAIL)
 
-        viewModel.loadState.observe(this) { loadState ->
-            when (loadState) {
-                LoadState.Done -> {
-                    layout_content.visibility = View.VISIBLE
-                    layout_error.visibility = View.INVISIBLE
-                    spinner.visibility = View.INVISIBLE
+        viewModel.loadState.observe(this,
+            Observer { loadState ->
+                when (loadState) {
+                    LoadState.Done -> {
+                        layout_content.visibility = View.VISIBLE
+                        layout_error.visibility = View.INVISIBLE
+                        spinner.visibility = View.INVISIBLE
+                    }
+
+                    LoadState.Loading -> {
+                        layout_content.visibility = View.INVISIBLE
+                        layout_error.visibility = View.INVISIBLE
+                        spinner.visibility = View.VISIBLE
+                    }
+
+                    is LoadState.Error -> {
+                        layout_content.visibility = View.INVISIBLE
+                        layout_error.visibility = View.VISIBLE
+                        spinner.visibility = View.INVISIBLE
+                        tv_error_msg.text = loadState.error.message
+                    }
                 }
 
-                LoadState.Loading -> {
-                    layout_content.visibility = View.INVISIBLE
-                    layout_error.visibility = View.INVISIBLE
-                    spinner.visibility = View.VISIBLE
-                }
+            })
 
-                is LoadState.Error -> {
-                    layout_content.visibility = View.INVISIBLE
-                    layout_error.visibility = View.VISIBLE
-                    spinner.visibility = View.INVISIBLE
-                    tv_error_msg.text = loadState.error.message
+        viewModel.userDetail.observe(this,
+            Observer { detail ->
+                detail?.let {
+                    updateUI(it)
                 }
-            }
-        }
-
-        viewModel.userDetail.observe(this) { detail ->
-            detail?.let {
-                updateUI(it)
-            }
-        }
+            })
 
         btn_reload.setOnClickListener {
             viewModel.reLoad()

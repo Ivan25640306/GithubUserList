@@ -2,7 +2,7 @@ package com.ivan.android.githubuserlist.di
 
 import android.content.Context
 import androidx.room.Room
-import com.ivan.android.githubuserlist.data.GitHubUsersRepostory
+import com.ivan.android.githubuserlist.data.GitHubUsersRepository
 import com.ivan.android.githubuserlist.db.GitHubDao
 import com.ivan.android.githubuserlist.db.GitHubDatabase
 import com.ivan.android.githubuserlist.network.GitHubService
@@ -26,13 +26,13 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideUsersViewModelFactory(repostory: GitHubUsersRepostory) =
+    fun provideUsersViewModelFactory(repostory: GitHubUsersRepository) =
         UsersViewModelFactory(repostory)
 
 
     @Provides
     @Singleton
-    fun provideDetailViewModelFactory(repostory: GitHubUsersRepostory) =
+    fun provideDetailViewModelFactory(repostory: GitHubUsersRepository) =
         UserDetailViewModelFactory(repostory)
 
 
@@ -45,7 +45,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideGitHubDao(database: GitHubDatabase): GitHubDao = database.gihubDao()
+    fun provideGitHubDao(database: GitHubDatabase): GitHubDao = database.githubDao()
 
 
     @Provides
