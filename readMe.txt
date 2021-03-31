@@ -17,7 +17,7 @@ ui目錄說明 及viewmodel配合:
 
 1.UsersActivity
 開啟app時，首先會顯示 UsersActivity，顯示Git hub使用者列表， viewmodel是 UsersViewModel
-並使用MergeAdapter的方式, 同時用二個adapter組合 ( UsersAdapter 負責 使用者列表顯示，LoadingAdapter 負責
+並使用ConcatAdapter的方式, 同時用二個adapter組合 ( UsersAdapter 負責 使用者列表顯示，LoadingAdapter 負責
 Loading顯示), 如果完全沒載入資料且連線失敗，會顯示 error訊息，有按鈕可以請使用者重載(重新連網)
 
 2.UserDetailActivity
