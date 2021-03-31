@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.MergeAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ivan.android.githubuserlist.GitHubAppliction
 import com.ivan.android.githubuserlist.R
@@ -23,7 +23,7 @@ class UsersActivity : AppCompatActivity() {
 
     private lateinit var gitHubAdapter: GitHubUsersAdapter
     private val loadingAdapter = LoadingAdapter()
-    private lateinit var adapter: MergeAdapter
+    private lateinit var adapter: ConcatAdapter
 
     private var firstLoading: Boolean = true
 
@@ -69,7 +69,7 @@ class UsersActivity : AppCompatActivity() {
         }
 
         gitHubAdapter = GitHubUsersAdapter(photoSize = this.dpToPx(58.0f))
-        adapter = MergeAdapter(gitHubAdapter, loadingAdapter)
+        adapter = ConcatAdapter(gitHubAdapter, loadingAdapter)
 
         rv_user_list.layoutManager = LinearLayoutManager(this)
         rv_user_list.addItemDecoration(SpacesItemDecoration(this.dpToPx(10.0f)))
